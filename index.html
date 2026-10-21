@@ -6,164 +6,412 @@
   <meta name="theme-color" content="#fff8ec">
   <title>軟冰淇淋模擬器 Pro</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-    }
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #fff8ec;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
-      color: #2c3e50;
-    }
-    #canvas-box {
-      position: absolute;
-      inset: 0;
-    }
-    canvas {
-      display: block;
-      width: 100% !important;
-      height: 100% !important;
-      touch-action: none;
-    }
-    #ui {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 14px;
-      padding-top: max(14px, env(safe-area-inset-top));
-      padding-bottom: max(14px, env(safe-area-inset-bottom));
-    }
-    .top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 10px;
-    }
-    .card {
-      background: rgba(255,255,255,0.93);
-      backdrop-filter: blur(10px);
-      border-radius: 16px;
-      padding: 10px 14px;
-      box-shadow: 0 4px 18px rgba(0,0,0,0.08);
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #fff8ec; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif; color: #2c3e50; }
+    #canvas-box { position: absolute; inset: 0; }
+    canvas { display: block; width: 100% !important; height: 100% !important; touch-action: none; }
+    #ui { position: absolute; inset: 0; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 14px; padding-top: max(14px, env(safe-area-inset-top)); padding-bottom: max(14px, env(safe-area-inset-bottom)); }
+    .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+    .card { background: rgba(255,255,255,0.93); backdrop-filter: blur(10px); border-radius: 16px; padding: 10px 14px; box-shadow: 0 4px 18px rgba(0,0,0,0.08); }
     .h-label { font-size: 11px; color: #7f8c8d; }
     .h-val { font-size: 26px; font-weight: 700; line-height: 1.15; }
     .h-best { font-size: 11px; color: #e67e22; margin-top: 2px; }
-    .flavors {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-      justify-content: center;
-      max-width: 168px;
-    }
-    .f-btn {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      border: 2.5px solid transparent;
-      cursor: pointer;
-      position: relative;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      pointer-events: auto;
-    }
-    .f-btn.active {
-      border-color: #2c3e50;
-      transform: scale(1.13);
-    }
-    .f-btn span {
-      position: absolute;
-      bottom: -17px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 10px;
-      white-space: nowrap;
-      opacity: 0;
-      transition: 0.15s;
-      color: #444;
-      pointer-events: none;
-    }
-    .f-btn.active span,
-    .f-btn:hover span {
-      opacity: 1;
-    }
-    .bal-wrap {
-      position: absolute;
-      top: 68px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 170px;
-      pointer-events: none;
-    }
-    .bal-bg {
-      height: 7px;
-      background: rgba(0,0,0,0.08);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .bal-fill {
-      height: 100%;
-      width: 50%;
-      background: #27ae60;
-      border-radius: 10px;
-      transition: background 0.15s;
-    }
-    .bal-label {
-      text-align: center;
-      font-size: 10px;
-      color: #95a5a6;
-      margin-top: 3px;
-    }
-    .hint {
-      position: absolute;
-      bottom: 88px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(44,62,80,0.88);
-      color: #fff;
-      padding: 9px 16px;
-      border-radius: 30px;
-      font-size: 13px;
-      pointer-events: none;
-      white-space: nowrap;
-      transition: opacity 0.4s;
-    }
+    .flavors { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; max-width: 168px; }
+    .f-btn { width: 34px; height: 34px; border-radius: 50%; border: 2.5px solid transparent; cursor: pointer; position: relative; box-shadow: 0 2px 6px rgba(0,0,0,0.15); pointer-events: auto; }
+    .f-btn.active { border-color: #2c3e50; transform: scale(1.13); }
+    .f-btn span { position: absolute; bottom: -17px; left: 50%; transform: translateX(-50%); font-size: 10px; white-space: nowrap; opacity: 0; transition: 0.15s; color: #444; pointer-events: none; }
+    .f-btn.active span, .f-btn:hover span { opacity: 1; }
+    .bal-wrap { position: absolute; top: 68px; left: 50%; transform: translateX(-50%); width: 170px; pointer-events: none; }
+    .bal-bg { height: 7px; background: rgba(0,0,0,0.08); border-radius: 10px; overflow: hidden; }
+    .bal-fill { height: 100%; width: 50%; background: #27ae60; border-radius: 10px; transition: background 0.15s; }
+    .bal-label { text-align: center; font-size: 10px; color: #95a5a6; margin-top: 3px; }
+    .hint { position: absolute; bottom: 88px; left: 50%; transform: translateX(-50%); background: rgba(44,62,80,0.88); color: #fff; padding: 9px 16px; border-radius: 30px; font-size: 13px; pointer-events: none; white-space: nowrap; transition: opacity 0.4s; }
     .hint.hide { opacity: 0; }
-    .bot {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      pointer-events: auto;
-    }
-    .btn {
-      border: none;
-      border-radius: 50px;
-      padding: 12px 24px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.16);
-    }
+    .bot { display: flex; justify-content: center; gap: 10px; pointer-events: auto; }
+    .btn { border: none; border-radius: 50px; padding: 12px 24px; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.16); }
     .btn-s { background: #ecf0f1; color: #2c3e50; }
     .btn-p { background: #e67e22; color: #fff; }
-    .title {
-      position: absolute;
-      top: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 12px;
-      font-weight: 600;
-      color: #b0b8c0;
-      letter-spacing: 1.2px;
-      opacity: 0.75;
-      pointer-events: none;
+    .title { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); font-size: 12px; font-weight: 600; color: #b0b8c0; letter-spacing: 1.2px; opacity: 0.75; pointer-events: none; }
+    #modal { position: absolute; inset: 0; background: rgba(0,0,0,0.48); display: none; align-items: center; justify-content: center; z-index: 40; pointer-events: auto; }
+    #modal.on { display: flex; }
+    .m-card { background: #fff; border-radius: 22px; padding: 28px 24px; text-align: center; width: 90%; max-width: 300px; box-shadow: 0 18px 50px rgba(0,0,0,0.25); }
+    .m-card h2 { font-size: 20px; margin-bottom: 4px; }
+    .m-h { font-size: 40px; font-weight: 800; color: #e67e22; margin: 10px 0; }
+    .m-new { color: #27ae60; font-weight: 600; display: none; margin-bottom: 8px; }
+    .m-new.on { display: block; }
+    .m-msg { font-size: 13px; color: #7f8c8d; margin-bottom: 16px; min-height: 18px; }
+    #err { display: none; position: absolute; inset: 0; background: #fff8ec; z-index: 50; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; }
+    #err.on { display: flex; }
+  </style>
+</head>
+<body>
+  <div id="canvas-box"></div>
+  <div id="ui">
+    <div class="top">
+      <div class="card">
+        <div class="h-label">目前高度</div>
+        <div class="h-val" id="hv">0.0 <small>cm</small></div>
+        <div class="h-best">最高：<span id="bv">0.0</span> cm</div>
+      </div>
+      <div class="card">
+        <div style="font-size:12px;font-weight:600;text-align:center;margin-bottom:8px">選擇口味</div>
+        <div class="flavors" id="fl"></div>
+      </div>
+    </div>
+    <div class="bal-wrap">
+      <div class="bal-bg"><div class="bal-fill" id="bf"></div></div>
+      <div class="bal-label">平衡</div>
+    </div>
+    <div class="hint" id="hint">移動甜筒對準管子，按住擠出冰淇淋</div>
+    <div class="bot">
+      <button class="btn btn-s" id="rst">重新開始</button>
+      <button class="btn btn-p" id="fin">完成！</button>
+    </div>
+  </div>
+  <div class="title">SOFT SERVE PRO</div>
+  <div id="modal">
+    <div class="m-card">
+      <h2 id="mt">完成！</h2>
+      <div class="m-h" id="mh">0.0 cm</div>
+      <div class="m-new" id="mn">新紀錄！</div>
+      <div class="m-msg" id="mm"></div>
+      <button class="btn btn-p" id="ag" style="width:100%">再玩一次</button>
+    </div>
+  </div>
+  <div id="err">
+    <h2>無法啟動 3D</h2>
+    <p>請使用 Chrome 或 Safari，並開啟硬體加速</p>
+  </div>
 
-... 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    (function () {
+      function hasWebGL() {
+        try {
+          var canvas = document.createElement('canvas');
+          return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+        } catch (e) {
+          return false;
+        }
+      }
+
+      if (!hasWebGL() || typeof THREE === 'undefined') {
+        document.getElementById('err').classList.add('on');
+        return;
+      }
+
+      var FLAVORS = [
+        { name: '香草', color: 0xf5e6c8 },
+        { name: '巧克力', color: 0x5c3a21 },
+        { name: '草莓', color: 0xf8a5c2 },
+        { name: '抹茶', color: 0x7d9b76 },
+        { name: '火龍果', color: 0xe85a71 },
+        { name: '芒果', color: 0xffb347 },
+        { name: '藍莓', color: 0x6b5b95 },
+        { name: '芝麻', color: 0x4a4a4a }
+      ];
+
+      var currentColor = FLAVORS[0].color;
+      var height = 0;
+      var best = parseFloat(localStorage.getItem('ssp-best') || '0');
+      var isHolding = false;
+      var isLive = true;
+      var isFalling = false;
+      var targetX = 0;
+      var targetZ = 0;
+      var balance = 0;
+      var fallVel = 0;
+      var fallRot = 0;
+
+      var hv = document.getElementById('hv');
+      var bv = document.getElementById('bv');
+      var bf = document.getElementById('bf');
+      var hint = document.getElementById('hint');
+      var modal = document.getElementById('modal');
+      var mt = document.getElementById('mt');
+      var mh = document.getElementById('mh');
+      var mn = document.getElementById('mn');
+      var mm = document.getElementById('mm');
+      var fl = document.getElementById('fl');
+
+      bv.textContent = best.toFixed(1);
+
+      for (var i = 0; i < FLAVORS.length; i++) {
+        (function (f, index) {
+          var btn = document.createElement('button');
+          btn.className = 'f-btn' + (index === 0 ? ' active' : '');
+          btn.style.background = '#' + f.color.toString(16).padStart(6, '0');
+          var span = document.createElement('span');
+          span.textContent = f.name;
+          btn.appendChild(span);
+          btn.onclick = function () {
+            var all = document.querySelectorAll('.f-btn');
+            for (var j = 0; j < all.length; j++) all[j].classList.remove('active');
+            btn.classList.add('active');
+            currentColor = f.color;
+            iceMat.color.setHex(currentColor);
+            streamMat.color.setHex(currentColor);
+          };
+          fl.appendChild(btn);
+        })(FLAVORS[i], i);
+      }
+
+      var scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xfff8ec);
+      scene.fog = new THREE.Fog(0xfff8ec, 9, 17);
+
+      var camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 50);
+      camera.position.set(0, 3.9, 7.5);
+      camera.lookAt(0, 2, 0);
+
+      var renderer;
+      try {
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        document.getElementById('canvas-box').appendChild(renderer.domElement);
+      } catch (e) {
+        document.getElementById('err').classList.add('on');
+        return;
+      }
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.72));
+      var dirLight = new THREE.DirectionalLight(0xffffff, 0.95);
+      dirLight.position.set(3.5, 9, 5);
+      dirLight.castShadow = true;
+      scene.add(dirLight);
+      var fillLight = new THREE.DirectionalLight(0xffe0b2, 0.28);
+      fillLight.position.set(-3, 3, -2);
+      scene.add(fillLight);
+
+      var ground = new THREE.Mesh(
+        new THREE.CircleGeometry(5.5, 48),
+        new THREE.MeshStandardMaterial({ color: 0xf0e6d2, roughness: 0.88 })
+      );
+      ground.rotation.x = -Math.PI / 2;
+      ground.receiveShadow = true;
+      scene.add(ground);
+
+      var nozzle = new THREE.Group();
+      nozzle.position.set(0, 4.45, 0);
+      var pipe = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.15, 0.19, 0.65, 14),
+        new THREE.MeshStandardMaterial({ color: 0x4a5568, metalness: 0.5, roughness: 0.28 })
+      );
+      pipe.position.y = 0.32;
+      nozzle.add(pipe);
+      var tip = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.055, 0.1, 0.26, 14),
+        new THREE.MeshStandardMaterial({ color: 0x2d3748, metalness: 0.55, roughness: 0.25 })
+      );
+      tip.position.y = -0.12;
+      nozzle.add(tip);
+      scene.add(nozzle);
+
+      var coneGroup = new THREE.Group();
+      coneGroup.position.set(0, 0.04, 0);
+      var cone = new THREE.Mesh(
+        new THREE.ConeGeometry(0.5, 1.5, 22, 1, true),
+        new THREE.MeshStandardMaterial({ color: 0xd4a574, roughness: 0.72, side: THREE.DoubleSide })
+      );
+      cone.position.y = 0.75;
+      cone.rotation.x = Math.PI;
+      cone.castShadow = true;
+      coneGroup.add(cone);
+      var innerCone = new THREE.Mesh(
+        new THREE.ConeGeometry(0.47, 1.45, 22, 1, true),
+        new THREE.MeshStandardMaterial({ color: 0xc48a5a, side: THREE.BackSide })
+      );
+      innerCone.position.y = 0.75;
+      innerCone.rotation.x = Math.PI;
+      coneGroup.add(innerCone);
+      scene.add(coneGroup);
+
+      var iceMat = new THREE.MeshStandardMaterial({ color: currentColor, roughness: 0.52, metalness: 0.04 });
+      var streamMat = new THREE.MeshStandardMaterial({ color: currentColor, roughness: 0.5, metalness: 0.04 });
+      var iceMesh = null;
+      var stream = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.085, 1, 8), streamMat);
+      stream.visible = false;
+      scene.add(stream);
+      function makeSwirl(cm, tilt) {
+        var H = Math.max(0.1, cm * 0.05);
+        var points = [];
+        var turns = 3.6 + cm * 0.065;
+        var seg = Math.max(32, Math.floor(cm * 5));
+        for (var i = 0; i <= seg; i++) {
+          var t = i / seg;
+          var y = t * H;
+          var r = 0.36 * (1 - t * 0.5) + 0.08;
+          var a = t * turns * Math.PI * 2;
+          var s = 0.065 * Math.sin(t * Math.PI * 6.5);
+          points.push(new THREE.Vector3(
+            Math.cos(a) * (r + s * 0.3) + tilt * t * 0.4,
+            y,
+            Math.sin(a) * (r + s * 0.3)
+          ));
+        }
+        var curve = new THREE.CatmullRomCurve3(points);
+        return new THREE.TubeGeometry(curve, seg, 0.12 * (1 - cm * 0.001), 9, false);
+      }
+
+      function updateIce() {
+        if (iceMesh) {
+          coneGroup.remove(iceMesh);
+          iceMesh.geometry.dispose();
+          iceMesh = null;
+        }
+        if (height < 0.5) return;
+        iceMesh = new THREE.Mesh(makeSwirl(height, balance), iceMat);
+        iceMesh.position.y = 1.42;
+        iceMesh.castShadow = true;
+        coneGroup.add(iceMesh);
+      }
+
+      var mouse = new THREE.Vector2();
+      var raycaster = new THREE.Raycaster();
+
+      function updatePointer(clientX, clientY) {
+        mouse.x = (clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(clientY / window.innerHeight) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+        var plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+        var hit = new THREE.Vector3();
+        if (raycaster.ray.intersectPlane(plane, hit)) {
+          targetX = THREE.MathUtils.clamp(hit.x, -2.4, 2.4);
+          targetZ = THREE.MathUtils.clamp(hit.z, -2, 2);
+        }
+      }
+
+      window.addEventListener('pointermove', function (e) {
+        if (isLive && !isFalling) updatePointer(e.clientX, e.clientY);
+      });
+      window.addEventListener('pointerdown', function (e) {
+        if (!isLive || isFalling) return;
+        if (e.target.closest('button') || e.target.closest('.flavors')) return;
+        isHolding = true;
+        updatePointer(e.clientX, e.clientY);
+        hint.classList.add('hide');
+      });
+      window.addEventListener('pointerup', function () { isHolding = false; });
+      window.addEventListener('pointerleave', function () { isHolding = false; });
+
+      document.getElementById('rst').onclick = resetGame;
+      document.getElementById('fin').onclick = function () { endGame(false); };
+      document.getElementById('ag').onclick = function () {
+        modal.classList.remove('on');
+        resetGame();
+      };
+
+      function resetGame() {
+        height = 0;
+        balance = 0;
+        fallVel = 0;
+        fallRot = 0;
+        isFalling = false;
+        isLive = true;
+        isHolding = false;
+        updateIce();
+        hv.innerHTML = '0.0 <small>cm</small>';
+        hint.classList.remove('hide');
+        coneGroup.position.set(0, 0.04, 0);
+        coneGroup.rotation.set(0, 0, 0);
+        targetX = 0;
+        targetZ = 0;
+        stream.visible = false;
+        bf.style.width = '50%';
+        bf.style.background = '#27ae60';
+      }
+
+      function endGame(failed) {
+        isLive = false;
+        isHolding = false;
+        stream.visible = false;
+        mh.textContent = height.toFixed(1) + ' cm';
+        mt.textContent = failed ? '倒塌了！' : '完成！';
+        mm.textContent = failed ? '平衡失控，冰淇淋掉下來了' : '';
+        if (height > best) {
+          best = height;
+          localStorage.setItem('ssp-best', best.toFixed(1));
+          bv.textContent = best.toFixed(1);
+          mn.classList.add('on');
+        } else {
+          mn.classList.remove('on');
+        }
+        modal.classList.add('on');
+      }
+
+      var clock = new THREE.Clock();
+
+      function animate() {
+        requestAnimationFrame(animate);
+        var dt = Math.min(clock.getDelta(), 0.05);
+
+        if (isFalling) {
+          fallVel += 14 * dt;
+          coneGroup.position.y -= fallVel * dt;
+          fallRot += 3.2 * dt;
+          coneGroup.rotation.z = fallRot * (balance >= 0 ? 1 : -1);
+          coneGroup.rotation.x = fallRot * 0.45;
+          if (coneGroup.position.y < -2.8) {
+            isFalling = false;
+            endGame(true);
+          }
+        } else if (isLive) {
+          coneGroup.position.x += (targetX - coneGroup.position.x) * 0.22;
+          coneGroup.position.z += (targetZ - coneGroup.position.z) * 0.22;
+
+          var dx = coneGroup.position.x - nozzle.position.x;
+          var dz = coneGroup.position.z - nozzle.position.z;
+          var dist = Math.sqrt(dx * dx + dz * dz);
+
+          var pct = Math.max(2, Math.min(98, 50 + balance * 32));
+          bf.style.width = pct + '%';
+          if (Math.abs(balance) > 0.75) bf.style.background = '#e74c3c';
+          else if (Math.abs(balance) > 0.4) bf.style.background = '#f39c12';
+          else bf.style.background = '#27ae60';
+
+          if (isHolding) {
+            var len = Math.max(0.2, 4.15 - (1.42 + height * 0.05));
+            stream.scale.set(1, len, 1);
+            stream.position.set(0, 4.15 - len / 2, 0);
+            stream.visible = true;
+
+            if (dist < 0.58) {
+              var fac = 1 - dist / 0.58;
+              height += 7.2 * fac * dt;
+              if (height > 140) height = 140;
+              balance += dx * 1.05 * dt;
+              balance *= (1 + height * 0.0011);
+              hv.innerHTML = height.toFixed(1) + ' <small>cm</small>';
+              updateIce();
+              if (Math.abs(balance) > 1.2 || (height > 30 && Math.abs(balance) > 0.9)) {
+                isFalling = true;
+                isHolding = false;
+                stream.visible = false;
+              }
+            } else {
+              balance += dx * 0.35 * dt;
+            }
+          } else {
+            stream.visible = false;
+            balance *= 0.982;
+          }
+          coneGroup.rotation.z = -balance * 0.28;
+        }
+
+        nozzle.position.y = 4.45 + Math.sin(clock.elapsedTime * 1.35) * 0.022;
+        renderer.render(scene, camera);
+      }
+
+      window.addEventListener('resize', function () {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      animate();
+    })();
+  </script>
+</body>
+</html>
