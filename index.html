@@ -10,36 +10,37 @@
     html, body { width: 100%; height: 100%; overflow: hidden; background: #fff8ec; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif; color: #2c3e50; }
     #canvas-container { position: absolute; inset: 0; width: 100%; height: 100%; }
     canvas { display: block; width: 100% !important; height: 100% !important; touch-action: none; }
-    #ui { position: absolute; inset: 0; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 16px; padding-top: max(16px, env(safe-area-inset-top)); padding-bottom: max(16px, env(safe-area-inset-bottom)); }
-    .top-bar { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
-    .height-display { background: rgba(255,255,255,0.9); backdrop-filter: blur(8px); border-radius: 16px; padding: 12px 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center; min-width: 110px; }
-    .height-display .label { font-size: 12px; color: #7f8c8d; }
-    .height-display .value { font-size: 26px; font-weight: 700; line-height: 1.2; }
-    .height-display .best { font-size: 12px; color: #e67e22; margin-top: 2px; }
-    .color-panel { background: rgba(255,255,255,0.92); backdrop-filter: blur(10px); border-radius: 18px; padding: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); pointer-events: auto; }
-    .color-panel .title { font-size: 13px; font-weight: 600; margin-bottom: 8px; text-align: center; }
-    .colors { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 150px; }
-    .color-btn { width: 34px; height: 34px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+    #ui { position: absolute; inset: 0; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 14px; padding-top: max(14px, env(safe-area-inset-top)); padding-bottom: max(14px, env(safe-area-inset-bottom)); }
+    .top-bar { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+    .height-display { background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); border-radius: 16px; padding: 10px 16px; box-shadow: 0 4px 18px rgba(0,0,0,0.08); text-align: center; min-width: 105px; }
+    .height-display .label { font-size: 11px; color: #7f8c8d; }
+    .height-display .value { font-size: 24px; font-weight: 700; line-height: 1.2; }
+    .height-display .best { font-size: 11px; color: #e67e22; margin-top: 2px; }
+    .color-panel { background: rgba(255,255,255,0.94); backdrop-filter: blur(10px); border-radius: 16px; padding: 10px 12px; box-shadow: 0 4px 18px rgba(0,0,0,0.1); pointer-events: auto; max-width: 170px; }
+    .color-panel .title { font-size: 12px; font-weight: 600; margin-bottom: 8px; text-align: center; }
+    .colors { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+    .color-btn { width: 32px; height: 32px; border-radius: 50%; border: 2.5px solid transparent; cursor: pointer; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
     .color-btn.active { border-color: #2c3e50; transform: scale(1.12); }
-    .color-btn.custom { background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red); }
-    .bottom-bar { display: flex; justify-content: center; gap: 12px; pointer-events: auto; }
-    button.action { background: #2c3e50; color: white; border: none; border-radius: 50px; padding: 13px 26px; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.18); }
+    .color-btn .flavor-name { position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); font-size: 10px; white-space: nowrap; color: #555; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+    .color-btn:hover .flavor-name, .color-btn.active .flavor-name { opacity: 1; }
+    .bottom-bar { display: flex; justify-content: center; gap: 10px; pointer-events: auto; }
+    button.action { background: #2c3e50; color: white; border: none; border-radius: 50px; padding: 12px 24px; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.18); }
     button.action.secondary { background: #ecf0f1; color: #2c3e50; }
     button.action.primary { background: #e67e22; }
-    .hint { position: absolute; bottom: 95px; left: 50%; transform: translateX(-50%); background: rgba(44,62,80,0.88); color: white; padding: 10px 16px; border-radius: 30px; font-size: 14px; pointer-events: none; white-space: nowrap; transition: opacity 0.4s; }
+    .hint { position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%); background: rgba(44,62,80,0.88); color: white; padding: 9px 16px; border-radius: 30px; font-size: 13px; pointer-events: none; white-space: nowrap; transition: opacity 0.4s; }
     .hint.hidden { opacity: 0; }
     #result-modal { position: absolute; inset: 0; background: rgba(0,0,0,0.45); display: none; align-items: center; justify-content: center; pointer-events: auto; z-index: 30; }
     #result-modal.show { display: flex; }
     .modal-card { background: white; border-radius: 22px; padding: 28px 24px; text-align: center; max-width: 300px; width: 90%; box-shadow: 0 16px 50px rgba(0,0,0,0.25); }
     .modal-card h2 { font-size: 20px; margin-bottom: 6px; }
-    .modal-card .final-height { font-size: 40px; font-weight: 800; color: #e67e22; margin: 10px 0; }
-    .modal-card .new-record { color: #27ae60; font-weight: 600; margin-bottom: 14px; display: none; }
+    .modal-card .final-height { font-size: 38px; font-weight: 800; color: #e67e22; margin: 10px 0; }
+    .modal-card .new-record { color: #27ae60; font-weight: 600; margin-bottom: 12px; display: none; }
     .modal-card .new-record.show { display: block; }
-    .game-title { position: absolute; top: 18px; left: 50%; transform: translateX(-50%); font-size: 14px; font-weight: 600; color: #95a5a6; letter-spacing: 1px; pointer-events: none; opacity: 0.7; }
+    .game-title { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); font-size: 13px; font-weight: 600; color: #95a5a6; letter-spacing: 1px; pointer-events: none; opacity: 0.7; }
     #error-box { display: none; position: absolute; inset: 0; background: #fff8ec; z-index: 50; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; }
     #error-box.show { display: flex; }
-    #error-box h2 { margin-bottom: 12px; font-size: 20px; }
-    #error-box p { color: #7f8c8d; line-height: 1.6; max-width: 320px; }
+    .balance-bar { position: absolute; top: 70px; left: 50%; transform: translateX(-50%); width: 160px; height: 8px; background: rgba(0,0,0,0.08); border-radius: 10px; overflow: hidden; pointer-events: none; }
+    .balance-fill { height: 100%; width: 50%; background: #27ae60; border-radius: 10px; transition: background 0.2s; }
   </style>
 </head>
 <body>
@@ -53,11 +54,14 @@
         <div class="best">最高紀錄：<span id="best-value">0.0</span> cm</div>
       </div>
       <div class="color-panel">
-        <div class="title">冰淇淋顏色</div>
+        <div class="title">選擇口味</div>
         <div class="colors" id="color-buttons"></div>
       </div>
     </div>
-    <div class="hint" id="hint">移動甜筒 → 按住擠冰淇淋</div>
+
+    <div class="balance-bar"><div class="balance-fill" id="balance-fill"></div></div>
+
+    <div class="hint" id="hint">移動甜筒對準管子 → 按住擠冰淇淋</div>
     <div class="bottom-bar">
       <button class="action secondary" id="btn-reset">重新開始</button>
       <button class="action primary" id="btn-finish">完成！</button>
@@ -68,51 +72,55 @@
 
   <div id="result-modal">
     <div class="modal-card">
-      <h2>完成！</h2>
+      <h2 id="result-title">完成！</h2>
       <div class="final-height" id="final-height">0.0 cm</div>
       <div class="new-record" id="new-record">🎉 新紀錄！</div>
-      <button class="action primary" id="btn-again" style="margin-top:12px;width:100%;">再玩一次</button>
+      <p id="result-msg" style="font-size:13px;color:#7f8c8d;margin-bottom:14px;"></p>
+      <button class="action primary" id="btn-again" style="width:100%;">再玩一次</button>
     </div>
   </div>
 
   <div id="error-box">
     <h2>無法啟動 3D 畫面</h2>
-    <p>你的瀏覽器可能不支援 WebGL，或被關閉了硬體加速。<br><br>請嘗試：<br>1. 換 Chrome / Safari<br>2. 開啟「硬體加速」<br>3. 更新瀏覽器</p>
+    <p>請改用 Chrome 或 Safari，並確認已開啟硬體加速。</p>
   </div>
 
-  <!-- 使用傳統方式載入 Three.js，相容性較好 -->
   <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
   <script>
     (function () {
-      // 檢查 WebGL
       function checkWebGL() {
         try {
-          const canvas = document.createElement('canvas');
-          return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+          const c = document.createElement('canvas');
+          return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl')));
         } catch (e) { return false; }
       }
-
       if (!checkWebGL() || typeof THREE === 'undefined') {
         document.getElementById('error-box').classList.add('show');
         return;
       }
 
-      const COLORS = [
-        { name: '香草', hex: 0xf5e6c8 },
+      // ===== 口味設定 =====
+      const FLAVORS = [
+        { name: '香草',   hex: 0xf5e6c8 },
         { name: '巧克力', hex: 0x5c3a21 },
-        { name: '草莓', hex: 0xf8a5c2 },
-        { name: '抹茶', hex: 0x8fbc8f },
-        { name: '藍莓', hex: 0x6b5b95 },
-        { name: '芒果', hex: 0xffb347 },
-        { name: '自訂', hex: 0xffffff, custom: true }
+        { name: '草莓',   hex: 0xf8a5c2 },
+        { name: '抹茶',   hex: 0x7d9b76 },
+        { name: '火龍果', hex: 0xe85a71 },
+        { name: '芒果',   hex: 0xffb347 },
+        { name: '藍莓',   hex: 0x6b5b95 },
+        { name: '芝麻',   hex: 0x4a4a4a }
       ];
 
-      let currentColor = COLORS[0].hex;
+      let currentColor = FLAVORS[0].hex;
       let height = 0;
       let bestHeight = parseFloat(localStorage.getItem('softserve-best') || '0');
       let isDispensing = false;
       let gameActive = true;
+      let isFalling = false;
       let targetX = 0, targetZ = 0;
+      let balanceOffset = 0;   // 正負代表左右傾斜
+      let fallVelocity = 0;
+      let fallRotation = 0;
 
       const heightValueEl = document.getElementById('height-value');
       const bestValueEl = document.getElementById('best-value');
@@ -120,46 +128,43 @@
       const resultModal = document.getElementById('result-modal');
       const finalHeightEl = document.getElementById('final-height');
       const newRecordEl = document.getElementById('new-record');
+      const resultTitle = document.getElementById('result-title');
+      const resultMsg = document.getElementById('result-msg');
       const colorButtonsEl = document.getElementById('color-buttons');
+      const balanceFill = document.getElementById('balance-fill');
 
       bestValueEl.textContent = bestHeight.toFixed(1);
 
-      // 顏色按鈕
-      COLORS.forEach((c, i) => {
+      // 建立口味按鈕
+      FLAVORS.forEach((f, i) => {
         const btn = document.createElement('button');
-        btn.className = 'color-btn' + (c.custom ? ' custom' : '');
-        if (!c.custom) btn.style.background = '#' + c.hex.toString(16).padStart(6, '0');
-        btn.title = c.name;
+        btn.className = 'color-btn';
+        btn.style.background = '#' + f.hex.toString(16).padStart(6, '0');
+        btn.title = f.name;
+        const label = document.createElement('span');
+        label.className = 'flavor-name';
+        label.textContent = f.name;
+        btn.appendChild(label);
         if (i === 0) btn.classList.add('active');
-        btn.addEventListener('click', function () {
+        btn.addEventListener('click', () => {
           document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
-          if (c.custom) {
-            const input = document.createElement('input');
-            input.type = 'color';
-            input.value = '#' + currentColor.toString(16).padStart(6, '0');
-            input.addEventListener('input', function (e) {
-              currentColor = parseInt(e.target.value.slice(1), 16);
-              iceCreamMat.color.setHex(currentColor);
-            });
-            input.click();
-          } else {
-            currentColor = c.hex;
-            iceCreamMat.color.setHex(currentColor);
-          }
+          currentColor = f.hex;
+          iceCreamMat.color.setHex(currentColor);
+          streamMat.color.setHex(currentColor);
         });
         colorButtonsEl.appendChild(btn);
       });
 
-      // Three.js 場景
+      // ===== Three.js =====
       const container = document.getElementById('canvas-container');
       const scene = new THREE.Scene();
       scene.background = new THREE.Color(0xfff8ec);
-      scene.fog = new THREE.Fog(0xfff8ec, 8, 18);
+      scene.fog = new THREE.Fog(0xfff8ec, 9, 18);
 
       const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-      camera.position.set(0, 3.5, 7);
-      camera.lookAt(0, 1.8, 0);
+      camera.position.set(0, 3.8, 7.2);
+      camera.lookAt(0, 1.9, 0);
 
       let renderer;
       try {
@@ -173,15 +178,12 @@
         return;
       }
 
-      // 燈光
       scene.add(new THREE.AmbientLight(0xffffff, 0.7));
       const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
       dirLight.position.set(4, 10, 6);
       dirLight.castShadow = true;
       scene.add(dirLight);
-      const fill = new THREE.DirectionalLight(0xffe0b2, 0.35);
-      fill.position.set(-3, 4, -2);
-      scene.add(fill);
+      scene.add(new THREE.DirectionalLight(0xffe0b2, 0.3).position.set(-3, 4, -2));
 
       // 地面
       const ground = new THREE.Mesh(
@@ -192,133 +194,163 @@
       ground.receiveShadow = true;
       scene.add(ground);
 
-      // 噴嘴
+      // ===== 噴嘴（管子） =====
       const nozzleGroup = new THREE.Group();
-      nozzleGroup.position.set(0, 4.2, 0);
-      const nozzleBody = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.18, 0.22, 0.5, 16),
-        new THREE.MeshStandardMaterial({ color: 0x4a5568, metalness: 0.4, roughness: 0.35 })
+      nozzleGroup.position.set(0, 4.35, 0);
+
+      const pipe = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.16, 0.20, 0.7, 16),
+        new THREE.MeshStandardMaterial({ color: 0x4a5568, metalness: 0.45, roughness: 0.3 })
       );
-      nozzleBody.position.y = 0.25;
-      nozzleGroup.add(nozzleBody);
-      const nozzleTip = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.07, 0.12, 0.25, 16),
-        new THREE.MeshStandardMaterial({ color: 0x2d3748, metalness: 0.5, roughness: 0.3 })
+      pipe.position.y = 0.35;
+      nozzleGroup.add(pipe);
+
+      const tip = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.06, 0.11, 0.28, 16),
+        new THREE.MeshStandardMaterial({ color: 0x2d3748, metalness: 0.5, roughness: 0.25 })
       );
-      nozzleTip.position.y = -0.1;
-      nozzleGroup.add(nozzleTip);
+      tip.position.y = -0.12;
+      nozzleGroup.add(tip);
       scene.add(nozzleGroup);
 
-      // 甜筒
+      // ===== 甜筒 =====
       const coneGroup = new THREE.Group();
       coneGroup.position.set(0, 0.05, 0);
+
       const cone = new THREE.Mesh(
-        new THREE.ConeGeometry(0.45, 1.4, 24, 1, true),
+        new THREE.ConeGeometry(0.48, 1.45, 24, 1, true),
         new THREE.MeshStandardMaterial({ color: 0xd4a574, roughness: 0.7, side: THREE.DoubleSide })
       );
-      cone.position.y = 0.7;
+      cone.position.y = 0.72;
       cone.rotation.x = Math.PI;
       cone.castShadow = true;
       coneGroup.add(cone);
-      const innerCone = new THREE.Mesh(
-        new THREE.ConeGeometry(0.42, 1.35, 24, 1, true),
+
+      const inner = new THREE.Mesh(
+        new THREE.ConeGeometry(0.45, 1.4, 24, 1, true),
         new THREE.MeshStandardMaterial({ color: 0xc48a5a, side: THREE.BackSide })
       );
-      innerCone.position.y = 0.7;
-      innerCone.rotation.x = Math.PI;
-      coneGroup.add(innerCone);
+      inner.position.y = 0.72;
+      inner.rotation.x = Math.PI;
+      coneGroup.add(inner);
       scene.add(coneGroup);
 
-      // 冰淇淋
+      // ===== 冰淇淋本體 =====
       let iceCreamMesh = null;
       const iceCreamMat = new THREE.MeshStandardMaterial({ color: currentColor, roughness: 0.55, metalness: 0.05 });
 
-      function createSwirlGeometry(heightCm) {
-        const h = Math.max(0.05, heightCm * 0.045);
+      // 從管子掉下來的「流動中」冰淇淋
+      const streamMat = new THREE.MeshStandardMaterial({ color: currentColor, roughness: 0.5, metalness: 0.05 });
+      const stream = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.07, 0.09, 0.01, 10),
+        streamMat
+      );
+      stream.visible = false;
+      scene.add(stream);
+
+      function createSwirlGeometry(hCm, tilt = 0) {
+        const h = Math.max(0.08, hCm * 0.048);
         const points = [];
-        const turns = 4 + heightCm * 0.08;
-        const segments = Math.max(40, Math.floor(heightCm * 6));
-        for (let i = 0; i <= segments; i++) {
-          const t = i / segments;
+        const turns = 3.8 + hCm * 0.07;
+        const segs = Math.max(36, Math.floor(hCm * 5.5));
+        for (let i = 0; i <= segs; i++) {
+          const t = i / segs;
           const y = t * h;
-          const radius = 0.32 * (1 - t * 0.55) + 0.06;
+          const radius = 0.34 * (1 - t * 0.52) + 0.07;
           const angle = t * turns * Math.PI * 2;
-          const swirlOffset = 0.08 * Math.sin(t * Math.PI * 8);
-          points.push(new THREE.Vector3(
-            Math.cos(angle) * (radius + swirlOffset * 0.3),
-            y,
-            Math.sin(angle) * (radius + swirlOffset * 0.3)
-          ));
+          const swirl = 0.07 * Math.sin(t * Math.PI * 7);
+          // 加入傾斜影響
+          const x = Math.cos(angle) * (radius + swirl * 0.25) + tilt * t * 0.35;
+          const z = Math.sin(angle) * (radius + swirl * 0.25);
+          points.push(new THREE.Vector3(x, y, z));
         }
         const curve = new THREE.CatmullRomCurve3(points);
-        return new THREE.TubeGeometry(curve, segments, 0.13 * (1 - heightCm * 0.0015), 12, false);
+        return new THREE.TubeGeometry(curve, segs, 0.125 * (1 - hCm * 0.0012), 10, false);
       }
 
-      function updateIceCream(heightCm) {
+      function updateIceCream() {
         if (iceCreamMesh) {
           coneGroup.remove(iceCreamMesh);
           iceCreamMesh.geometry.dispose();
           iceCreamMesh = null;
         }
-        if (heightCm < 0.3) return;
-        iceCreamMesh = new THREE.Mesh(createSwirlGeometry(heightCm), iceCreamMat);
-        iceCreamMesh.position.y = 1.35;
+        if (height < 0.4) return;
+        iceCreamMesh = new THREE.Mesh(createSwirlGeometry(height, balanceOffset), iceCreamMat);
+        iceCreamMesh.position.y = 1.38;
         iceCreamMesh.castShadow = true;
         coneGroup.add(iceCreamMesh);
       }
 
-      // 輸入
+      // ===== 輸入 =====
       const mouse = new THREE.Vector2();
       const raycaster = new THREE.Raycaster();
 
-      function updatePointer(clientX, clientY) {
-        mouse.x = (clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(clientY / window.innerHeight) * 2 + 1;
+      function updatePointer(cx, cy) {
+        mouse.x = (cx / window.innerWidth) * 2 - 1;
+        mouse.y = -(cy / window.innerHeight) * 2 + 1;
         raycaster.setFromCamera(mouse, camera);
         const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
-        const intersect = new THREE.Vector3();
-        if (raycaster.ray.intersectPlane(plane, intersect)) {
-          targetX = THREE.MathUtils.clamp(intersect.x, -2.2, 2.2);
-          targetZ = THREE.MathUtils.clamp(intersect.z, -1.8, 1.8);
+        const hit = new THREE.Vector3();
+        if (raycaster.ray.intersectPlane(plane, hit)) {
+          targetX = THREE.MathUtils.clamp(hit.x, -2.3, 2.3);
+          targetZ = THREE.MathUtils.clamp(hit.z, -1.9, 1.9);
         }
       }
 
-      window.addEventListener('pointermove', function (e) {
-        if (!gameActive) return;
+      window.addEventListener('pointermove', e => {
+        if (!gameActive || isFalling) return;
         updatePointer(e.clientX, e.clientY);
       });
-      window.addEventListener('pointerdown', function (e) {
-        if (!gameActive) return;
+      window.addEventListener('pointerdown', e => {
+        if (!gameActive || isFalling) return;
         if (e.target.closest('button') || e.target.closest('.color-panel')) return;
         isDispensing = true;
         updatePointer(e.clientX, e.clientY);
         hintEl.classList.add('hidden');
       });
-      window.addEventListener('pointerup', function () { isDispensing = false; });
-      window.addEventListener('pointerleave', function () { isDispensing = false; });
+      window.addEventListener('pointerup', () => { isDispensing = false; });
+      window.addEventListener('pointerleave', () => { isDispensing = false; });
 
       document.getElementById('btn-reset').addEventListener('click', resetGame);
-      document.getElementById('btn-finish').addEventListener('click', finishGame);
-      document.getElementById('btn-again').addEventListener('click', function () {
+      document.getElementById('btn-finish').addEventListener('click', () => finishGame(false));
+      document.getElementById('btn-again').addEventListener('click', () => {
         resultModal.classList.remove('show');
         resetGame();
       });
 
       function resetGame() {
         height = 0;
+        balanceOffset = 0;
+        fallVelocity = 0;
+        fallRotation = 0;
+        isFalling = false;
         gameActive = true;
         isDispensing = false;
-        updateIceCream(0);
+        updateIceCream();
         heightValueEl.innerHTML = '0.0 <small>cm</small>';
         hintEl.classList.remove('hidden');
         coneGroup.position.set(0, 0.05, 0);
+        coneGroup.rotation.set(0, 0, 0);
         targetX = 0; targetZ = 0;
+        stream.visible = false;
+        balanceFill.style.width = '50%';
+        balanceFill.style.background = '#27ae60';
       }
 
-      function finishGame() {
+      function finishGame(collapsed) {
         gameActive = false;
         isDispensing = false;
+        stream.visible = false;
         finalHeightEl.textContent = height.toFixed(1) + ' cm';
+
+        if (collapsed) {
+          resultTitle.textContent = '倒塌了！';
+          resultMsg.textContent = '甜筒失去平衡，冰淇淋掉下來了…';
+        } else {
+          resultTitle.textContent = '完成！';
+          resultMsg.textContent = '';
+        }
+
         if (height > bestHeight) {
           bestHeight = height;
           localStorage.setItem('softserve-best', bestHeight.toFixed(1));
@@ -330,33 +362,92 @@
         resultModal.classList.add('show');
       }
 
+      // ===== 主迴圈 =====
       const clock = new THREE.Clock();
 
       function animate() {
         requestAnimationFrame(animate);
         const dt = Math.min(clock.getDelta(), 0.05);
 
-        coneGroup.position.x += (targetX - coneGroup.position.x) * 0.18;
-        coneGroup.position.z += (targetZ - coneGroup.position.z) * 0.18;
+        if (isFalling) {
+          // 倒塌動畫
+          fallVelocity += 12 * dt;
+          coneGroup.position.y -= fallVelocity * dt;
+          fallRotation += 2.8 * dt;
+          coneGroup.rotation.z = fallRotation * Math.sign(balanceOffset || 1);
+          coneGroup.rotation.x = fallRotation * 0.4;
 
-        if (isDispensing && gameActive) {
+          if (coneGroup.position.y < -2.5) {
+            isFalling = false;
+            finishGame(true);
+          }
+        } else if (gameActive) {
+          // 平滑移動甜筒
+          coneGroup.position.x += (targetX - coneGroup.position.x) * 0.2;
+          coneGroup.position.z += (targetZ - coneGroup.position.z) * 0.2;
+
+          // 計算與噴嘴的水平距離
           const dx = coneGroup.position.x - nozzleGroup.position.x;
           const dz = coneGroup.position.z - nozzleGroup.position.z;
           const dist = Math.sqrt(dx * dx + dz * dz);
-          if (dist < 0.55) {
-            const factor = 1 - (dist / 0.55);
-            height += 8.5 * factor * dt;
-            if (height > 120) height = 120;
-            heightValueEl.innerHTML = height.toFixed(1) + ' <small>cm</small>';
-            updateIceCream(height);
+
+          // 更新平衡條
+          const balancePercent = Math.max(0, Math.min(100, 50 + balanceOffset * 35));
+          balanceFill.style.width = balancePercent + '%';
+          if (Math.abs(balanceOffset) > 0.7) balanceFill.style.background = '#e74c3c';
+          else if (Math.abs(balanceOffset) > 0.4) balanceFill.style.background = '#f39c12';
+          else balanceFill.style.background = '#27ae60';
+
+          if (isDispensing) {
+            // 顯示從管子掉下來的冰淇淋流
+            const streamLen = Math.max(0.15, 4.1 - (1.38 + height * 0.048));
+            stream.scale.y = streamLen / 0.01;
+            stream.position.set(0, 4.1 - streamLen / 2, 0);
+            stream.visible = true;
+
+            if (dist < 0.62) {
+              // 有接到
+              const factor = 1 - (dist / 0.62);
+              const grow = 7.8 * factor * dt;
+              height += grow;
+              if (height > 130) height = 130;
+
+              // 平衡計算：甜筒偏離越多，offset 累積越快
+              balanceOffset += dx * 0.9 * dt;
+              // 高度越高越不穩
+              balanceOffset *= (1 + height * 0.0008);
+
+              heightValueEl.innerHTML = height.toFixed(1) + ' <small>cm</small>';
+              updateIceCream();
+
+              // 倒塌判定
+              if (Math.abs(balanceOffset) > 1.15 || (height > 25 && Math.abs(balanceOffset) > 0.95)) {
+                isFalling = true;
+                isDispensing = false;
+                stream.visible = false;
+              }
+            } else {
+              // 沒對準，冰淇淋直接掉到地上（這裡只是不長高）
+              // 可以加一點懲罰讓平衡更差
+              balanceOffset += dx * 0.3 * dt;
+            }
+          } else {
+            stream.visible = false;
+            // 停止擠的時候，平衡會慢慢回正一點點
+            balanceOffset *= 0.985;
           }
+
+          // 讓甜筒有一點傾斜視覺回饋
+          coneGroup.rotation.z = -balanceOffset * 0.25;
         }
 
-        nozzleGroup.position.y = 4.2 + Math.sin(clock.elapsedTime * 1.5) * 0.03;
+        // 噴嘴微微晃動
+        nozzleGroup.position.y = 4.35 + Math.sin(clock.elapsedTime * 1.4) * 0.025;
+
         renderer.render(scene, camera);
       }
 
-      window.addEventListener('resize', function () {
+      window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
