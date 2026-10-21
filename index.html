@@ -1,265 +1,169 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#fff8ec" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#fff8ec">
   <title>軟冰淇淋模擬器 Pro</title>
   <style>
-    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
-    html,body{width:100%;height:100%;overflow:hidden;background:#fff8ec;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;color:#2c3e50}
-    #c{position:absolute;inset:0}
-    canvas{display:block;width:100%!important;height:100%!important;touch-action:none}
-    #ui{position:absolute;inset:0;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:14px;padding-top:max(14px,env(safe-area-inset-top));padding-bottom:max(14px,env(safe-area-inset-bottom))}
-    .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-    .card{background:rgba(255,255,255,.93);backdrop-filter:blur(10px);border-radius:16px;padding:10px 14px;box-shadow:0 4px 18px rgba(0,0,0,.08)}
-    .h-label{font-size:11px;color:#7f8c8d}
-    .h-val{font-size:26px;font-weight:700;line-height:1.15}
-    .h-best{font-size:11px;color:#e67e22;margin-top:2px}
-    .flavors{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;max-width:168px}
-    .f-btn{width:34px;height:34px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;position:relative;box-shadow:0 2px 6px rgba(0,0,0,.15);pointer-events:auto}
-    .f-btn.active{border-color:#2c3e50;transform:scale(1.13)}
-    .f-btn span{position:absolute;bottom:-17px;left:50%;transform:translateX(-50%);font-size:10px;white-space:nowrap;opacity:0;transition:.15s;color:#444;pointer-events:none}
-    .f-btn.active span,.f-btn:hover span{opacity:1}
-    .bal-wrap{position:absolute;top:68px;left:50%;transform:translateX(-50%);width:170px;pointer-events:none}
-    .bal-bg{height:7px;background:rgba(0,0,0,.08);border-radius:10px;overflow:hidden}
-    .bal-fill{height:100%;width:50%;background:#27ae60;border-radius:10px;transition:background .15s}
-    .bal-label{text-align:center;font-size:10px;color:#95a5a6;margin-top:3px}
-    .hint{position:absolute;bottom:88px;left:50%;transform:translateX(-50%);background:rgba(44,62,80,.88);color:#fff;padding:9px 16px;border-radius:30px;font-size:13px;pointer-events:none;white-space:nowrap;transition:opacity .4s}
-    .hint.hide{opacity:0}
-    .bot{display:flex;justify-content:center;gap:10px;pointer-events:auto}
-    .btn{border:none;border-radius:50px;padding:12px 24px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.16)}
-    .btn-s{background:#ecf0f1;color:#2c3e50}
-    .btn-p{background:#e67e22;color:#fff}
-    .title{position:absolute;top:14px;left:50%;transform:translateX(-50%);font-size:12px;font-weight:600;color:#b0b8c0;letter-spacing:1.2px;opacity:.75;pointer-events:none}
-    #modal{position:absolute;inset:0;background:rgba(0,0,0,.48);display:none;align-items:center;justify-content:center;z-index:40;pointer-events:auto}
-    #modal.on{display:flex}
-    .m-card{background:#fff;border-radius:22px;padding:28px 24px;text-align:center;width:90%;max-width:300px;box-shadow:0 18px 50px rgba(0,0,0,.25)}
-    .m-card h2{font-size:20px;margin-bottom:4px}
-    .m-h{font-size:40px;font-weight:800;color:#e67e22;margin:10px 0}
-    .m-new{color:#27ae60;font-weight:600;display:none;margin-bottom:8px}
-    .m-new.on{display:block}
-    .m-msg{font-size:13px;color:#7f8c8d;margin-bottom:16px;min-height:18px}
-    #err{display:none;position:absolute;inset:0;background:#fff8ec;z-index:50;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px}
-    #err.on{display:flex}
-  </style>
-</head>
-<body>
-  <div id="c"></div>
-  <div id="ui">
-    <div class="top">
-      <div class="card">
-        <div class="h-label">目前高度</div>
-        <div class="h-val" id="hv">0.0 <small>cm</small></div>
-        <div class="h-best">最高：<span id="bv">0.0</span> cm</div>
-      </div>
-      <div class="card">
-        <div style="font-size:12px;font-weight:600;text-align:center;margin-bottom:8px">選擇口味</div>
-        <div class="flavors" id="fl"></div>
-      </div>
-    </div>
-    <div class="bal-wrap">
-      <div class="bal-bg"><div class="bal-fill" id="bf"></div></div>
-      <div class="bal-label">平衡</div>
-    </div>
-    <div class="hint" id="hint">移動甜筒對準管子，按住擠出冰淇淋</div>
-    <div class="bot">
-      <button class="btn btn-s" id="rst">重新開始</button>
-      <button class="btn btn-p" id="fin">完成！</button>
-    </div>
-  </div>
-  <div class="title">SOFT SERVE PRO</div>
-  <div id="modal">
-    <div class="m-card">
-      <h2 id="mt">完成！</h2>
-      <div class="m-h" id="mh">0.0 cm</div>
-      <div class="m-new" id="mn">🎉 新紀錄！</div>
-      <div class="m-msg" id="mm"></div>
-      <button class="btn btn-p" id="ag" style="width:100%">再玩一次</button>
-    </div>
-  </div>
-  <div id="err"><h2>無法啟動 3D</h2><p>請使用 Chrome / Safari，並開啟硬體加速</p></div>
-
-  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-  <script>
-  (function(){
-    function hasGL(){try{const c=document.createElement('canvas');return!!(window.WebGLRenderingContext&&(c.getContext('webgl')||c.getContext('experimental-webgl')))}catch(e){return false}}
-    if(!hasGL()||typeof THREE==='undefined'){document.getElementById('err').classList.add('on');return}
-
-    const F=[
-      {n:'香草',c:0xf5e6c8},{n:'巧克力',c:0x5c3a21},{n:'草莓',c:0xf8a5c2},
-      {n:'抹茶',c:0x7d9b76},{n:'火龍果',c:0xe85a71},{n:'芒果',c:0xffb347},
-      {n:'藍莓',c:0x6b5b95},{n:'芝麻',c:0x4a4a4a}
-    ];
-    let col=F[0].c, h=0, best=+localStorage.getItem('ssp-best')||0;
-    let hold=false, live=true, falling=false;
-    let tx=0,tz=0, bal=0, fv=0, fr=0;
-
-    const $=(id)=>document.getElementById(id);
-    $('bv').textContent=best.toFixed(1);
-
-    F.forEach((f,i)=>{
-      const b=document.createElement('button');
-      b.className='f-btn'+(i===0?' active':'');
-      b.style.background='#'+f.c.toString(16).padStart(6,'0');
-      const s=document.createElement('span');s.textContent=f.n;b.appendChild(s);
-      b.onclick=()=>{
-        document.querySelectorAll('.f-btn').forEach(x=>x.classList.remove('active'));
-        b.classList.add('active');
-        col=f.c; mat.color.setHex(col); smat.color.setHex(col);
-      };
-      $('fl').appendChild(b);
-    });
-
-    const scene=new THREE.Scene();
-    scene.background=new THREE.Color(0xfff8ec);
-    scene.fog=new THREE.Fog(0xfff8ec,9,17);
-    const cam=new THREE.PerspectiveCamera(42,innerWidth/innerHeight,0.1,50);
-    cam.position.set(0,3.9,7.5); cam.lookAt(0,2,0);
-
-    let ren;
-    try{
-      ren=new THREE.WebGLRenderer({antialias:true});
-      ren.setSize(innerWidth,innerHeight);
-      ren.setPixelRatio(Math.min(devicePixelRatio,2));
-      ren.shadowMap.enabled=true;
-      $('c').appendChild(ren.domElement);
-    }catch(e){$('err').classList.add('on');return}
-
-    scene.add(new THREE.AmbientLight(0xffffff,0.72));
-    const L=new THREE.DirectionalLight(0xffffff,0.95); L.position.set(3.5,9,5); L.castShadow=true; scene.add(L);
-    scene.add(new THREE.DirectionalLight(0xffe0b2,0.28).position.set(-3,3,-2));
-
-    const ground=new THREE.Mesh(new THREE.CircleGeometry(5.5,48),new THREE.MeshStandardMaterial({color:0xf0e6d2,roughness:0.88}));
-    ground.rotation.x=-Math.PI/2; ground.receiveShadow=true; scene.add(ground);
-
-    // 管子
-    const noz=new THREE.Group(); noz.position.set(0,4.45,0);
-    noz.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.15,0.19,0.65,14),new THREE.MeshStandardMaterial({color:0x4a5568,metalness:0.5,roughness:0.28})),{position:{x:0,y:0.32,z:0}}));
-    noz.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.055,0.1,0.26,14),new THREE.MeshStandardMaterial({color:0x2d3748,metalness:0.55,roughness:0.25})),{position:{x:0,y:-0.12,z:0}}));
-    scene.add(noz);
-
-    // 甜筒
-    const coneG=new THREE.Group(); coneG.position.set(0,0.04,0);
-    const cone=new THREE.Mesh(new THREE.ConeGeometry(0.5,1.5,22,1,true),new THREE.MeshStandardMaterial({color:0xd4a574,roughness:0.72,side:THREE.DoubleSide}));
-    cone.position.y=0.75; cone.rotation.x=Math.PI; cone.castShadow=true; coneG.add(cone);
-    coneG.add(Object.assign(new THREE.Mesh(new THREE.ConeGeometry(0.47,1.45,22,1,true),new THREE.MeshStandardMaterial({color:0xc48a5a,side:THREE.BackSide})),{position:{x:0,y:0.75,z:0},rotation:{x:Math.PI,y:0,z:0}}));
-    scene.add(coneG);
-
-    // 冰淇淋
-    let ice=null;
-    const mat=new THREE.MeshStandardMaterial({color:col,roughness:0.52,metalness:0.04});
-    const smat=new THREE.MeshStandardMaterial({color:col,roughness:0.5,metalness:0.04});
-    const stream=new THREE.Mesh(new THREE.CylinderGeometry(0.065,0.085,1,8),smat);
-    stream.visible=false; scene.add(stream);
-
-    function makeGeo(cm,tilt){
-      const H=Math.max(0.1,cm*0.05);
-      const pts=[], turns=3.6+cm*0.065, seg=Math.max(32,Math.floor(cm*5));
-      for(let i=0;i<=seg;i++){
-        const t=i/seg, y=t*H;
-        const r=0.36*(1-t*0.5)+0.08;
-        const a=t*turns*Math.PI*2;
-        const s=0.065*Math.sin(t*Math.PI*6.5);
-        pts.push(new THREE.Vector3(Math.cos(a)*(r+s*0.3)+tilt*t*0.4, y, Math.sin(a)*(r+s*0.3)));
-      }
-      return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),seg,0.12*(1-cm*0.001),9,false);
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
     }
-    function updIce(){
-      if(ice){coneG.remove(ice);ice.geometry.dispose();ice=null}
-      if(h<0.5)return;
-      ice=new THREE.Mesh(makeGeo(h,bal),mat);
-      ice.position.y=1.42; ice.castShadow=true; coneG.add(ice);
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #fff8ec;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+      color: #2c3e50;
     }
-
-    // 輸入
-    const m=new THREE.Vector2(), rc=new THREE.Raycaster();
-    function ptr(x,y){
-      m.x=(x/innerWidth)*2-1; m.y=-(y/innerHeight)*2+1;
-      rc.setFromCamera(m,cam);
-      const p=new THREE.Plane(new THREE.Vector3(0,1,0),0), hit=new THREE.Vector3();
-      if(rc.ray.intersectPlane(p,hit)){tx=THREE.MathUtils.clamp(hit.x,-2.4,2.4);tz=THREE.MathUtils.clamp(hit.z,-2,2)}
+    #canvas-box {
+      position: absolute;
+      inset: 0;
     }
-    addEventListener('pointermove',e=>{if(live&&!falling)ptr(e.clientX,e.clientY)});
-    addEventListener('pointerdown',e=>{
-      if(!live||falling)return;
-      if(e.target.closest('button')||e.target.closest('.flavors'))return;
-      hold=true; ptr(e.clientX,e.clientY); $('hint').classList.add('hide');
-    });
-    addEventListener('pointerup',()=>hold=false);
-    addEventListener('pointerleave',()=>hold=false);
-
-    $('rst').onclick=reset; $('fin').onclick=()=>end(false);
-    \( ('ag').onclick=()=>{ \)('modal').classList.remove('on');reset()};
-
-    function reset(){
-      h=0;bal=0;fv=0;fr=0;falling=false;live=true;hold=false;
-      updIce(); $('hv').innerHTML='0.0 <small>cm</small>';
-      $('hint').classList.remove('hide');
-      coneG.position.set(0,0.04,0); coneG.rotation.set(0,0,0);
-      tx=tz=0; stream.visible=false;
-      $('bf').style.width='50%'; $('bf').style.background='#27ae60';
+    canvas {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+      touch-action: none;
     }
-    function end(fail){
-      live=false; hold=false; stream.visible=false;
-      $('mh').textContent=h.toFixed(1)+' cm';
-      $('mt').textContent=fail?'倒塌了！':'完成！';
-      $('mm').textContent=fail?'平衡失控，冰淇淋掉下來了':'';
-      if(h>best){best=h;localStorage.setItem('ssp-best',best.toFixed(1));\( ('bv').textContent=best.toFixed(1); \)('mn').classList.add('on')}
-      else $('mn').classList.remove('on');
-      $('modal').classList.add('on');
+    #ui {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 14px;
+      padding-top: max(14px, env(safe-area-inset-top));
+      padding-bottom: max(14px, env(safe-area-inset-bottom));
     }
-
-    const clock=new THREE.Clock();
-    function loop(){
-      requestAnimationFrame(loop);
-      const dt=Math.min(clock.getDelta(),0.05);
-
-      if(falling){
-        fv+=14*dt; coneG.position.y-=fv*dt;
-        fr+=3.2*dt; coneG.rotation.z=fr*Math.sign(bal||1); coneG.rotation.x=fr*0.45;
-        if(coneG.position.y<-2.8){falling=false;end(true)}
-      }else if(live){
-        coneG.position.x+=(tx-coneG.position.x)*0.22;
-        coneG.position.z+=(tz-coneG.position.z)*0.22;
-
-        const dx=coneG.position.x-noz.position.x;
-        const dz=coneG.position.z-noz.position.z;
-        const dist=Math.sqrt(dx*dx+dz*dz);
-
-        // 平衡條
-        const pct=Math.max(2,Math.min(98,50+bal*32));
-        $('bf').style.width=pct+'%';
-        $('bf').style.background=Math.abs(bal)>0.75?'#e74c3c':Math.abs(bal)>0.4?'#f39c12':'#27ae60';
-
-        if(hold){
-          const len=Math.max(0.2,4.15-(1.42+h*0.05));
-          stream.scale.set(1,len,1); stream.position.set(0,4.15-len/2,0); stream.visible=true;
-
-          if(dist<0.58){
-            const fac=1-dist/0.58;
-            h+=7.2*fac*dt; if(h>140)h=140;
-            // 核心：偏離越多 + 高度越高 → 平衡越難維持
-            bal+=dx*1.05*dt;
-            bal*=(1+h*0.0011);
-            $('hv').innerHTML=h.toFixed(1)+' <small>cm</small>';
-            updIce();
-            if(Math.abs(bal)>1.2||(h>30&&Math.abs(bal)>0.9)){falling=true;hold=false;stream.visible=false}
-          }else{
-            bal+=dx*0.35*dt;
-          }
-        }else{
-          stream.visible=false;
-          bal*=0.982; // 慢慢回正
-        }
-        coneG.rotation.z=-bal*0.28;
-      }
-      noz.position.y=4.45+Math.sin(clock.elapsedTime*1.35)*0.022;
-      ren.render(scene,cam);
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
     }
-    addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();ren.setSize(innerWidth,innerHeight)});
-    loop();
-  })();
-  </script>
-</body>
-</html>
+    .card {
+      background: rgba(255,255,255,0.93);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 10px 14px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+    }
+    .h-label { font-size: 11px; color: #7f8c8d; }
+    .h-val { font-size: 26px; font-weight: 700; line-height: 1.15; }
+    .h-best { font-size: 11px; color: #e67e22; margin-top: 2px; }
+    .flavors {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      justify-content: center;
+      max-width: 168px;
+    }
+    .f-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 2.5px solid transparent;
+      cursor: pointer;
+      position: relative;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      pointer-events: auto;
+    }
+    .f-btn.active {
+      border-color: #2c3e50;
+      transform: scale(1.13);
+    }
+    .f-btn span {
+      position: absolute;
+      bottom: -17px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: 0.15s;
+      color: #444;
+      pointer-events: none;
+    }
+    .f-btn.active span,
+    .f-btn:hover span {
+      opacity: 1;
+    }
+    .bal-wrap {
+      position: absolute;
+      top: 68px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 170px;
+      pointer-events: none;
+    }
+    .bal-bg {
+      height: 7px;
+      background: rgba(0,0,0,0.08);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .bal-fill {
+      height: 100%;
+      width: 50%;
+      background: #27ae60;
+      border-radius: 10px;
+      transition: background 0.15s;
+    }
+    .bal-label {
+      text-align: center;
+      font-size: 10px;
+      color: #95a5a6;
+      margin-top: 3px;
+    }
+    .hint {
+      position: absolute;
+      bottom: 88px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(44,62,80,0.88);
+      color: #fff;
+      padding: 9px 16px;
+      border-radius: 30px;
+      font-size: 13px;
+      pointer-events: none;
+      white-space: nowrap;
+      transition: opacity 0.4s;
+    }
+    .hint.hide { opacity: 0; }
+    .bot {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      pointer-events: auto;
+    }
+    .btn {
+      border: none;
+      border-radius: 50px;
+      padding: 12px 24px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.16);
+    }
+    .btn-s { background: #ecf0f1; color: #2c3e50; }
+    .btn-p { background: #e67e22; color: #fff; }
+    .title {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      font-weight: 600;
+      color: #b0b8c0;
+      letter-spacing: 1.2px;
+      opacity: 0.75;
+      pointer-events: none;
+
+... 
