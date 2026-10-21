@@ -74,7 +74,8 @@
       <div class="m-h" id="mh">0.0 cm</div>
       <div class="m-new" id="mn">新紀錄！</div>
       <div class="m-msg" id="mm"></div>
-      <button class="btn btn-p" id="ag" style="width:100%">再玩一次</button>
+      <a href="https://s.shopee.tw/80Dbmm015f" target="_blank" rel="noopener" class="btn btn-p" style="width:100%; display:block; text-align:center; text-decoration:none; margin-bottom:12px; background:#ee4d2d;">去蝦皮看看 →</a>
+      <button class="btn btn-s" id="ag" style="width:100%">再玩一次</button>
     </div>
   </div>
   <div id="err">
@@ -192,7 +193,6 @@
       ground.receiveShadow = true;
       scene.add(ground);
 
-      // 管子
       var nozzle = new THREE.Group();
       nozzle.position.set(0, 4.45, 0);
       var pipe = new THREE.Mesh(
@@ -209,7 +209,6 @@
       nozzle.add(tip);
       scene.add(nozzle);
 
-      // 甜筒
       var coneGroup = new THREE.Group();
       coneGroup.position.set(0, 0.04, 0);
       var cone = new THREE.Mesh(
@@ -232,11 +231,10 @@
       var iceMat = new THREE.MeshStandardMaterial({ color: currentColor, roughness: 0.52, metalness: 0.04 });
       var streamMat = new THREE.MeshStandardMaterial({ color: currentColor, roughness: 0.48, metalness: 0.04 });
       var iceMesh = null;
-
-      // 有紋路的流動冰淇淋（螺旋條）
       var streamGroup = new THREE.Group();
       streamGroup.visible = false;
       scene.add(streamGroup);
+
       function makeSwirl(cm, tilt) {
         var H = Math.max(0.1, cm * 0.05);
         var points = [];
@@ -271,18 +269,14 @@
         coneGroup.add(iceMesh);
       }
 
-      // 建立有螺旋紋路的流出物
       function updateStream(len) {
-        // 清除舊的
         while (streamGroup.children.length > 0) {
           var c = streamGroup.children[0];
           streamGroup.remove(c);
           if (c.geometry) c.geometry.dispose();
         }
-
         if (len < 0.15) return;
 
-        // 主體螺旋
         var points = [];
         var segments = Math.max(20, Math.floor(len * 28));
         for (var i = 0; i <= segments; i++) {
@@ -298,10 +292,8 @@
         }
         var curve = new THREE.CatmullRomCurve3(points);
         var geo = new THREE.TubeGeometry(curve, segments, 0.048, 8, false);
-        var mesh = new THREE.Mesh(geo, streamMat);
-        streamGroup.add(mesh);
+        streamGroup.add(new THREE.Mesh(geo, streamMat));
 
-        // 外層細螺旋紋路（增加細節）
         var points2 = [];
         for (var i = 0; i <= segments; i++) {
           var t = i / segments;
@@ -316,8 +308,7 @@
         }
         var curve2 = new THREE.CatmullRomCurve3(points2);
         var geo2 = new THREE.TubeGeometry(curve2, segments, 0.018, 6, false);
-        var mesh2 = new THREE.Mesh(geo2, streamMat);
-        streamGroup.add(mesh2);
+        streamGroup.add(new THREE.Mesh(geo2, streamMat));
       }
 
       var mouse = new THREE.Vector2();
@@ -391,6 +382,9 @@
           mn.classList.remove('on');
         }
         modal.classList.add('on');
+        setTimeout(function () {
+          window.open('https://s.shopee.tw/80Dbmm015f', '_blank');
+        }, 800);
       }
 
       var clock = new THREE.Clock();
