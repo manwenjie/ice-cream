@@ -74,7 +74,8 @@
       <div class="m-h" id="mh">0.0 cm</div>
       <div class="m-new" id="mn">新紀錄！</div>
       <div class="m-msg" id="mm"></div>
-      <a href="https://s.shopee.tw/80Dbmm015f" target="_blank" rel="noopener" class="btn btn-p" style="width:100%; display:block; text-align:center; text-decoration:none; margin-bottom:12px; background:#ee4d2d;">去蝦皮看看 →</a>
+      <a href="https://s.shopee.tw/5q97DiOQOe" target="_blank" rel="noopener" class="btn btn-p" style="width:100%; display:block; text-align:center; text-decoration:none; margin-bottom:10px; background:#ee4d2d;">去蝦皮看看 →</a>
+      <a href="https://www.threads.com/@nanashop_614" target="_blank" rel="noopener" class="btn btn-p" style="width:100%; display:block; text-align:center; text-decoration:none; margin-bottom:12px; background:#000;">去追蹤我 →</a>
       <button class="btn btn-s" id="ag" style="width:100%">再玩一次</button>
     </div>
   </div>
@@ -229,7 +230,7 @@
       scene.add(coneGroup);
 
       var iceMat = new THREE.MeshStandardMaterial({ color: currentColor, roughness: 0.52, metalness: 0.04 });
-      var streamMat = new THREE.MeshStandardMaterial({ color: currentColor, roughness: 0.48, metalness: 0.04 });
+      var streamMat = new THREE.MeshStandardMaterial({ color: currentColor, roughness: 0.45, metalness: 0.05 });
       var iceMesh = null;
       var streamGroup = new THREE.Group();
       streamGroup.visible = false;
@@ -238,22 +239,22 @@
       function makeSwirl(cm, tilt) {
         var H = Math.max(0.1, cm * 0.05);
         var points = [];
-        var turns = 3.8 + cm * 0.07;
-        var seg = Math.max(36, Math.floor(cm * 5.5));
+        var turns = 4.2 + cm * 0.08;
+        var seg = Math.max(40, Math.floor(cm * 6));
         for (var i = 0; i <= seg; i++) {
           var t = i / seg;
           var y = t * H;
-          var r = 0.36 * (1 - t * 0.5) + 0.08;
+          var r = 0.38 * (1 - t * 0.48) + 0.09;
           var a = t * turns * Math.PI * 2;
-          var s = 0.07 * Math.sin(t * Math.PI * 7);
+          var s = 0.08 * Math.sin(t * Math.PI * 8);
           points.push(new THREE.Vector3(
-            Math.cos(a) * (r + s * 0.3) + tilt * t * 0.4,
+            Math.cos(a) * (r + s * 0.35) + tilt * t * 0.42,
             y,
-            Math.sin(a) * (r + s * 0.3)
+            Math.sin(a) * (r + s * 0.35)
           ));
         }
         var curve = new THREE.CatmullRomCurve3(points);
-        return new THREE.TubeGeometry(curve, seg, 0.12 * (1 - cm * 0.001), 10, false);
+        return new THREE.TubeGeometry(curve, seg, 0.125 * (1 - cm * 0.001), 12, false);
       }
 
       function updateIce() {
@@ -277,38 +278,49 @@
         }
         if (len < 0.15) return;
 
-        var points = [];
-        var segments = Math.max(20, Math.floor(len * 28));
+        var segments = Math.max(28, Math.floor(len * 36));
+
+        var points1 = [];
         for (var i = 0; i <= segments; i++) {
           var t = i / segments;
           var y = -t * len;
-          var radius = 0.055 + 0.012 * Math.sin(t * Math.PI * 10);
-          var angle = t * Math.PI * 8;
-          points.push(new THREE.Vector3(
-            Math.cos(angle) * radius * 0.4,
+          var radius = 0.06 + 0.018 * Math.sin(t * Math.PI * 12);
+          var angle = t * Math.PI * 10;
+          points1.push(new THREE.Vector3(
+            Math.cos(angle) * radius * 0.45,
             y,
-            Math.sin(angle) * radius * 0.4
+            Math.sin(angle) * radius * 0.45
           ));
         }
-        var curve = new THREE.CatmullRomCurve3(points);
-        var geo = new THREE.TubeGeometry(curve, segments, 0.048, 8, false);
-        streamGroup.add(new THREE.Mesh(geo, streamMat));
+        streamGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points1), segments, 0.052, 10, false), streamMat));
 
         var points2 = [];
         for (var i = 0; i <= segments; i++) {
           var t = i / segments;
           var y = -t * len;
-          var radius = 0.07;
-          var angle = t * Math.PI * 12 + 0.8;
+          var radius = 0.078;
+          var angle = t * Math.PI * 14 + 1.2;
           points2.push(new THREE.Vector3(
-            Math.cos(angle) * radius * 0.35,
+            Math.cos(angle) * radius * 0.38,
             y,
-            Math.sin(angle) * radius * 0.35
+            Math.sin(angle) * radius * 0.38
           ));
         }
-        var curve2 = new THREE.CatmullRomCurve3(points2);
-        var geo2 = new THREE.TubeGeometry(curve2, segments, 0.018, 6, false);
-        streamGroup.add(new THREE.Mesh(geo2, streamMat));
+        streamGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points2), segments, 0.028, 8, false), streamMat));
+
+        var points3 = [];
+        for (var i = 0; i <= segments; i++) {
+          var t = i / segments;
+          var y = -t * len;
+          var radius = 0.09;
+          var angle = t * Math.PI * 18 + 2.4;
+          points3.push(new THREE.Vector3(
+            Math.cos(angle) * radius * 0.32,
+            y,
+            Math.sin(angle) * radius * 0.32
+          ));
+        }
+        streamGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points3), segments, 0.015, 6, false), streamMat));
       }
 
       var mouse = new THREE.Vector2();
@@ -382,8 +394,10 @@
           mn.classList.remove('on');
         }
         modal.classList.add('on');
+
+        // 自動開啟 Threads 主頁
         setTimeout(function () {
-          window.open('https://s.shopee.tw/80Dbmm015f', '_blank');
+          window.open('https://www.threads.com/@nanashop_614', '_blank');
         }, 800);
       }
 
